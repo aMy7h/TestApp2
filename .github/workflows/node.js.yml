@@ -25,17 +25,15 @@ jobs:
       - run: npm install
       - run: npm run build --if-present
       
-  security:
+  nodejs:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@master
-      - name: Run Snyk to check for vulnerabilities
-        uses: snyk/actions/node@master
-        continue-on-error: true 
-        env:
-          SNYK_TOKEN: 43e28cf1-35e6-4b43-906b-d6bf055cc59d
-        with:
-          args: --severity-threshold=high
+    - name: Checkout code
+      uses: actions/checkout@v3
+    - name: Generate package.lock json
+      run: npm i --package-lock-only
+    - name: Find vulnerable packages
+      run: npm audit
           
           
   deploy:
@@ -50,8 +48,8 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@13d241b293754004c80624b5567555c4a39ffbe3
         with:
-          aws-access-key-id: AKIAYS35TR4UUPO4YXGV
-          aws-secret-access-key: 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
+          aws-access-key-id:  ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: "us-east-1"
 
       - name: Login to Amazon ECR

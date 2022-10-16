@@ -28,14 +28,12 @@ jobs:
   security:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@master
-      - name: Run Snyk to check for vulnerabilities
-        uses: snyk/actions/node@master
-        continue-on-error: true 
-        env:
-          SNYK_TOKEN: 43e28cf1-35e6-4b43-906b-d6bf055cc59d
-        with:
-          args: --severity-threshold=high
+    - name: Checkout code
+      uses: actions/checkout@v3
+    - name: Generate package.lock json
+      run: npm i --package-lock-only
+    - name: Find vulnerable packages
+      run: npm audit
           
           
   deploy:

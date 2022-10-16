@@ -32,6 +32,7 @@ jobs:
       - uses: actions/checkout@master
       - name: Run Snyk to check for vulnerabilities
         uses: snyk/actions/node@master
+        continue-on-error: true 
         env:
           SNYK_TOKEN: 43e28cf1-35e6-4b43-906b-d
         with:

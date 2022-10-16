@@ -52,7 +52,7 @@ jobs:
         with:
           aws-access-key-id: AKIAYS35TR4U3VJO5DVH
           aws-secret-access-key: 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
-          aws-region: ${{ env.AWS_REGION }}
+          aws-region: "N. Virginia"
 
       - name: Login to Amazon ECR
         id: login-ecr

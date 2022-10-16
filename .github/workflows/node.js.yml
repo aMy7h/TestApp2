@@ -33,7 +33,7 @@ jobs:
         uses: snyk/actions/node@master
         continue-on-error: true 
         env:
-          SNYK_TOKEN: 43e28cf1-35e6-4b43-906b-d
+          SNYK_TOKEN: 43e28cf1-35e6-4b43-906b-d6bf055cc59d
         with:
           args: --severity-threshold=high
           

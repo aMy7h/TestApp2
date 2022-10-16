@@ -17,7 +17,7 @@ jobs:
       - name: Run Snyk to check for vulnerabilities
         uses: snyk/actions/node@master
         env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+          SNYK_TOKEN: ${{ 43e28cf1-35e6-4b43-906b-d6bf055cc59d }}
     
       - run: npm ci
       - run: npm run build --if-present

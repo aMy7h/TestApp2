@@ -28,13 +28,12 @@ jobs:
       
   security:
     runs-on: ubuntu-latest
-    continue-on-error: true
     steps:
       - uses: actions/checkout@master
       - name: Run Snyk to check for vulnerabilities
         uses: snyk/actions/node@master
         env:
-          SNYK_TOKEN: 43e28cf1-35e6-4b43-906b-d6bf055cc59d
+          SNYK_TOKEN: 43e28cf1-35e6-4b43-906b-d
         with:
           args: --severity-threshold=high
           
@@ -51,8 +50,8 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@13d241b293754004c80624b5567555c4a39ffbe3
         with:
-          aws-access-key-id: AKIAYS35TR4U3VJO5DVH
-          aws-secret-access-key: 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
+          aws-access-key-id: AKIAYS35TR4
+          aws-secret-access-key: OgZzvSXb+R8g1RxP/
           aws-region: "us-east-1"
 
       - name: Login to Amazon ECR

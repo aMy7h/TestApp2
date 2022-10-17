@@ -10,7 +10,7 @@ on:
     branches: [ "master" ]
 
 env:
-  AWS_REGION: "us-east-1"                     # set this to your preferred AWS region, e.g. us-west-1
+  AWS_REGION: "us-east-2"                     # set this to your preferred AWS region, e.g. us-west-1
   ECR_REPOSITORY: amy7h               # set this to your Amazon ECR repository name
   ECS_SERVICE: sample-app-service                 # set this to your Amazon ECS service name
   ECS_CLUSTER: default                 # set this to your Amazon ECS cluster name
@@ -34,7 +34,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: "us-east-1"
+          aws-region: "us-east-2"
 
       - name: Login to Amazon ECR
         id: login-ecr
@@ -50,7 +50,7 @@ jobs:
           # Build a docker container and
           # push it to ECR so that it can
           # be deployed to ECS.
-          aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/s9l4v7q1
+          aws ecr-public get-login-password --region us-east-2 | docker login --username AWS --password-stdin public.ecr.aws/s9l4v7q1
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"

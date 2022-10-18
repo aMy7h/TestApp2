@@ -11,7 +11,7 @@ on:
 
 env:
   AWS_REGION: "us-east-2"                           # set this to your preferred AWS region, e.g. us-west-1
-  ECR_REPOSITORY: my_repo                          # set this to your Amazon ECR repository name
+  ECR_REPOSITORY: my_repo                          # set this to your Amon ECR repository name
   ECS_SERVICE: sample-app-service                 # set this to your Amazon ECS service name
   ECS_CLUSTER: default                              # set this to your Amazon ECS cluster name
   ECS_TASK_DEFINITION: "first-run-task-definition"    # set this to the path to your Amazon ECS task definition
@@ -23,39 +23,47 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
-    - name: Download kubectl
-      run: |
-        apt update && apt -y install curl
-        curl -LO https://dl.k8s.io/release/v1.23.0/bin/linux/amd64/kubectl
-        chmod +x kubectl
-        sudo mv kubectl /usr/local/bin
-        curl -Lo aws-iam-authenticator https://github.com/kubernetes-sigs/aws-iam-authenticator/releases/download/v0.5.9/aws-iam-authenticator_0.5.9_linux_amd64
-        chmod +x ./aws-iam-authenticator
-        sudo mv aws-iam-authenticator /usr/local/bin
-    - name: Copy kubectl to a file
-      env:
-        KUBECONFIG: ${{ secrets.KUBECONFIG }}
-      run: 'echo "$KUBECONFIG" > conf'
+   - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-2
         
-    - name: Deploy to kubernetes
-      env:
-        KUBECONFIG: ${{ secrets.KUBECONFIG }}
-        AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        AWS_SESSION_TOKEN: ${{ secrets.SESSIONTOKEN }}
-      run: |
-        kubectl --kubeconfig conf get nodes
-        export RAND=$RANDOM
-        echo "Performing deployment of nginx$RANDOM"
-        kubectl --kubeconfig conf create deployment nginx$RAND --image nginx
-        kubectl --kubeconfig conf expose deployment nginx$RAND --port 80 --type LoadBalancer
-        external_ip=""
-        while [ -z $external_ip ]; do
-          echo "Waiting for end point..."
-          external_ip=$(kubectl --kubeconfig conf get svc nginx$RAND --template="{{range .status.loadBalancer.ingress}}{{.ip}}{{end}}")
-          [ -z "$external_ip" ] && sleep 10
-        done
-        echo 'End point ready:' && echo $external_ip
-        kubectl --kubeconfig conf get svc nginx$RAND
+- name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1
+      
+- name: Build, tag, and push image to Amazon ECR
+    id: build-image
+    env:
+    ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+    run: |
+    cd site
+    docker image build \
+    --tag ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:latest \
+    --tag ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.SHORT_SHA }} \
+    .
+    docker push ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:latest
+    docker push ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.SHORT_SHA }}
+    
+- name: Install and configure kubectl
+    run: |
+    VERSION=$(curl --silent https://storage.googleapis.com/kubernetes-release/release/stable.txt)
+    curl https://storage.googleapis.com/kubernetes-release/release/$VERSION/bin/linux/amd64/kubectl \
+        --progress-bar \
+        --location \
+        --remote-name
+    chmod +x kubectl
+    sudo mv kubectl /usr/local/bin/
+    echo ${{ secrets.KUBECONFIG }} | base64 --decode > kubeconfig.yaml
+    
+- name: Deploy
+    env:
+    ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+    run: |
+    export ECR_REPOSITORY=${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}
+    export IMAGE_TAG=${{ env.SHORT_SHA }}
+    export KUBECONFIG=kubeconfig.yaml
+    envsubst < k8s/kustomization.tmpl.yaml > k8s/kustomization.yaml
+    kubectl kustomize k8s | kubectl apply -f -

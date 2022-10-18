@@ -58,8 +58,4 @@ jobs:
       env:
         KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
       with:
-<<<<<<< HEAD
         args: rollout status deployment/my-app
-=======
-        args: rollout status deployment/my-app
->>>>>>> 98d67a54dc3233191243f7038db2ac6ce6796df3

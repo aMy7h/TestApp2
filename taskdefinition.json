@@ -72,5 +72,5 @@
     "cpu": "256",
     "memory": "512",
     "registeredAt": "2022-10-16T19:27:32.303000+04:00",
-    "registeredBy": "arn:aws:iam::590284558121:iamUser1.si"
+    "registeredBy": "arn:aws:iam::590284558121:root"
 }

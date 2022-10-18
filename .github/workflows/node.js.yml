@@ -23,7 +23,6 @@ jobs:
           
   deploy:
     
-    deploy:
     name: deploy to cluster
     runs-on: ubuntu-latest
     steps:

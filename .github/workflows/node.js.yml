@@ -20,10 +20,6 @@ env:
   
 jobs:
   
-          
-  on: push
-name: deploy
-jobs:
   deploy:
   
     name: deploy to cluster

@@ -42,8 +42,8 @@ jobs:
         kubectl get nodes
         export RAND=$RANDOM
         echo "Performing deployment of nginx$RANDOM"
-        kubectl create deployment nginx$RAND --image nginx
-        kubectl expose deployment nginx$RAND --port 80 --type LoadBalancer
+        kubectl conf create deployment nginx$RAND --image nginx
+        kubectl conf expose deployment nginx$RAND --port 80 --type LoadBalancer
 
         external_ip=""
         while [ -z $external_ip ]; do
@@ -53,4 +53,4 @@ jobs:
         done
         echo 'End point ready:' && echo $external_ip
 
-        kubectl get svc nginx$RAND
+        kubectl conf get svc nginx$RAND

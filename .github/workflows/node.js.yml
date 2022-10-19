@@ -28,6 +28,7 @@ jobs:
       
   security:
     runs-on: ubuntu-latest
+    continue-on-error: true 
     needs: build
     steps:
     - name: Checkout code

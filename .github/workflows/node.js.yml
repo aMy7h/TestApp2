@@ -40,12 +40,11 @@ jobs:
         AWS_SESSION_TOKEN: ${{ secrets.SESSIONTOKEN }}
       run: |
         echo "test" 
-        echo $KUBECONFIG
         echo $AWS_ACCESS_KEY
         echo $AWS_SECRET_ACCESS_KEY
         echo $AWS_SESSION_TOKEN
+        echo "test2"
 
-        cat conf 
         kubectl --kubeconfig conf get nodes
         export RAND=$RANDOM
         echo "Performing deployment of nginx$RANDOM"

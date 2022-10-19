@@ -78,4 +78,3 @@ jobs:
         done
         echo 'End point ready:' && echo $external_ip
         kubectl --kubeconfig conf get svc demonodejspack1$RAND
-Update

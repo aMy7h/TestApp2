@@ -39,11 +39,6 @@ jobs:
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         AWS_SESSION_TOKEN: ${{ secrets.SESSIONTOKEN }}
       run: |
-        echo "test" 
-        echo $AWS_ACCESS_KEY
-        echo $AWS_SECRET_ACCESS_KEY
-        echo $AWS_SESSION_TOKEN
-        echo "test2"
 
         kubectl --kubeconfig conf get nodes
         export RAND=$RANDOM

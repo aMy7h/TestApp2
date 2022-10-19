@@ -40,6 +40,8 @@ jobs:
         
     
       run: |
+        echo "test" 
+        cat conf 
         kubectl --kubeconfig conf get nodes
         export RAND=$RANDOM
         echo "Performing deployment of nginx$RANDOM"

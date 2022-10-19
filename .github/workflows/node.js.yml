@@ -39,11 +39,11 @@ jobs:
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         
       run: |
-        kubectl --kubeconfig conf get nodes
+        kubectl get nodes
         export RAND=$RANDOM
         echo "Performing deployment of nginx$RANDOM"
-        kubectl --kubeconfig conf create deployment nginx$RAND --image nginx
-        kubectl --kubeconfig conf expose deployment nginx$RAND --port 80 --type LoadBalancer
+        kubectl create deployment nginx$RAND --image nginx
+        kubectl expose deployment nginx$RAND --port 80 --type LoadBalancer
 
         external_ip=""
         while [ -z $external_ip ]; do
@@ -53,4 +53,4 @@ jobs:
         done
         echo 'End point ready:' && echo $external_ip
 
-        kubectl --kubeconfig conf get svc nginx$RAND
+        kubectl get svc nginx$RAND

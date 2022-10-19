@@ -31,10 +31,6 @@ jobs:
       env:
         KUBECONFIG: ${{ secrets.KUBECONFIG }}
       run: 'echo "$KUBECONFIG" > conf'
-        
-    - name: Sleep for 30 seconds
-      run: sleep 30s
-      shell: bash
       
     - name: Deploy to kubernetes
       env:

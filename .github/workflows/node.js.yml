@@ -32,12 +32,17 @@ jobs:
         KUBECONFIG: ${{ secrets.KUBECONFIG }}
       run: 'echo "$KUBECONFIG" > conf'
         
+    - name: Sleep for 30 seconds
+      run: sleep 30s
+      shell: bash
+      
     - name: Deploy to kubernetes
       env:
         KUBECONFIG: ${{ secrets.KUBECONFIG }}
         AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         
+    
       run: |
         kubectl --kubeconfig conf get nodes
         export RAND=$RANDOM

@@ -57,7 +57,7 @@ jobs:
         export RAND=$RANDOM
         echo "Performing deployment of demonodejspack1$RANDOM"
         kubectl --kubeconfig conf create deployment demonodejspack1$RAND --image amyth11/demonodejspack1
-        kubectl --kubeconfig conf expose deployment demonodejspack1$RAND --port 8081 --type LoadBalancer
+        kubectl --kubeconfig conf expose deployment demonodejspack1$RAND --port 3000 --type LoadBalancer
         external_ip=""
         while [ -z $external_ip ]; do
           echo "Waiting for end point..."

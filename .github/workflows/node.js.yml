@@ -50,10 +50,9 @@ jobs:
         
       run: |
         kubectl --kubeconfig conf get nodes
-        export RAND=$RANDOM
-        echo "Performing deployment of amyth/demonodejs$RANDOM"
-        kubectl --kubeconfig conf create deployment amyth/demonodejs$RAND --image amyth/demonodejs
-        kubectl --kubeconfig conf expose deployment amyth/demonodejs$RAND --port 3000 --type LoadBalancer
+        echo "Performing deployment of amyth/demonodejs"
+        kubectl --kubeconfig conf create deployment amyth/demonodejs --image amyth/demonodejs
+        kubectl --kubeconfig conf expose deployment amyth/demonodejs --port 3000 --type LoadBalancer
         external_ip=""
         while [ -z $external_ip ]; do
           echo "Waiting for end point..."
@@ -61,6 +60,6 @@ jobs:
           [ -z "$external_ip" ] && sleep 10
         done
         echo 'End point ready:' && echo $external_ip
-        kubectl --kubeconfig conf get svc amyth/demonodejs$RAND
+        kubectl --kubeconfig conf get svc amyth/demonodejs
 
   

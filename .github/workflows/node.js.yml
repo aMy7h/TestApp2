@@ -10,7 +10,6 @@ on:
     branches: [ "master" ]
   
 jobs:
-
       
   deploy:
     runs-on: ubuntu-latest
@@ -30,27 +29,25 @@ jobs:
       env:
         KUBECONFIG: ${{ secrets.KUBECONFIG }}
       run: 'echo "$KUBECONFIG" > conf'
-      
+        
     - name: Deploy to kubernetes
       env:
         KUBECONFIG: ${{ secrets.KUBECONFIG }}
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        AWS_ACCESS_KEY: ${{ secrets.ACCESSKEY }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.SECRETACCESSKEY }}
         AWS_SESSION_TOKEN: ${{ secrets.SESSIONTOKEN }}
-        
       run: |
         kubectl --kubeconfig conf get nodes
         export RAND=$RANDOM
-        echo "Performing deployment of nginx"
+        echo "Performing deployment of nginx$RANDOM"
         kubectl --kubeconfig conf create deployment nginx$RAND --image nginx
         kubectl --kubeconfig conf expose deployment nginx$RAND --port 80 --type LoadBalancer
         external_ip=""
         while [ -z $external_ip ]; do
           echo "Waiting for end point..."
           external_ip=$(kubectl --kubeconfig conf get svc nginx$RAND --template="{{range .status.loadBalancer.ingress}}{{.ip}}{{end}}")
-          [ -z "$external_ip" ]
+          [ -z "$external_ip" ] && sleep 10
         done
         echo 'End point ready:' && echo $external_ip
         kubectl --kubeconfig conf get svc nginx$RAND
-
-  
+Footer

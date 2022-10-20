@@ -21,6 +21,7 @@ jobs:
           node-version: "14.x"
       - run: docker build . -t demonodejsapp
       - run: docker tag demonodejsapp amyth11/demonodejsapp:latest
+      - run: docker login -u amyth11 -p ${{ secrets.DKRHB_PASSWD }}
       - run: docker push amyth11/demonodejsapp
 
   deploy:

@@ -39,16 +39,17 @@ jobs:
         
       run: |
         kubectl --kubeconfig conf get nodes
+        export RAND=$RANDOM
         echo "Performing deployment of demoNodejsApp"
-        kubectl --kubeconfig conf create deployment nginx --image nginx
-        kubectl --kubeconfig conf expose deployment nginx --port 3000 --type LoadBalancer
+        kubectl --kubeconfig conf create deployment nginx$RAND --image nginx
+        kubectl --kubeconfig conf expose deployment nginx$RAND --port 3000 --type LoadBalancer
         external_ip=""
         while [ -z $external_ip ]; do
           echo "Waiting for end point..."
-          external_ip=$(kubectl --kubeconfig conf get svc nginx --template="{{range .status.loadBalancer.ingress}}{{.ip}}{{end}}")
+          external_ip=$(kubectl --kubeconfig conf get svc nginx$RAND --template="{{range .status.loadBalancer.ingress}}{{.ip}}{{end}}")
           [ -z "$external_ip" ] && sleep 10
         done
         echo 'End point ready:' && echo $external_ip
-        kubectl --kubeconfig conf get svc nginx
+        kubectl --kubeconfig conf get svc nginx$RAND
 
   

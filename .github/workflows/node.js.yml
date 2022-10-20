@@ -19,10 +19,10 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: "14.x"
-      - run: docker build . -t demonodejsapp
-      - run: docker tag demonodejsapp amyth11/demonodejsapp
+      - run: docker build . -t demonodejsapp1
+      - run: docker tag demonodejsapp1 amyth11/demonodejsapp1
       - run: docker login -u amyth11 -p ${{ secrets.DKRHB_PASSWD }}
-      - run: docker push amyth11/demonodejsapp
+      - run: docker push amyth11/demonodejsapp1
 
   deploy:
     runs-on: ubuntu-latest
@@ -54,15 +54,15 @@ jobs:
       run: |
         kubectl --kubeconfig conf get nodes
         echo "Performing deployment of demoNodejsApp"
-        kubectl --kubeconfig conf create deployment demonodejsapp --image demonodejsapp
-        kubectl --kubeconfig conf expose deployment demonodejsapp --port 3000 --type LoadBalancer
+        kubectl --kubeconfig conf create deployment demonodejsapp1 --image demonodejsapp1
+        kubectl --kubeconfig conf expose deployment demonodejsapp1 --port 3000 --type LoadBalancer
         external_ip=""
         while [ -z $external_ip ]; do
           echo "Waiting for end point..."
-          external_ip=$(kubectl --kubeconfig conf get svc demonodejsapp --template="{{range .status.loadBalancer.ingress}}{{.ip}}{{end}}")
+          external_ip=$(kubectl --kubeconfig conf get svc demonodejsapp1 --template="{{range .status.loadBalancer.ingress}}{{.ip}}{{end}}")
           [ -z "$external_ip" ] && sleep 10
         done
         echo 'End point ready:' && echo $external_ip
-        kubectl --kubeconfig conf get svc demonodejsapp
+        kubectl --kubeconfig conf get svc demonodejsapp1
 
   

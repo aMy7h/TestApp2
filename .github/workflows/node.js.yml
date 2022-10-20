@@ -20,6 +20,7 @@ jobs:
         with:
           node-version: "14.x"
       - run: docker build . -t demonodejsapp
+      - run: docker tag demonodejsapp amyth11/demonodejsapp:latest
       - run: docker push amyth11/demonodejsapp
 
   deploy:

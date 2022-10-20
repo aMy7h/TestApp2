@@ -19,7 +19,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: "14.x"
-      - run: docker build . -t amyth/demonodejs
+      - run: docker build . -t demoNodejsApp
 
   deploy:
     runs-on: ubuntu-latest
@@ -50,16 +50,16 @@ jobs:
         
       run: |
         kubectl --kubeconfig conf get nodes
-        echo "Performing deployment of amyth/demonodejs"
-        kubectl --kubeconfig conf create deployment amyth/demonodejs --image amyth/demonodejs
-        kubectl --kubeconfig conf expose deployment amyth/demonodejs --port 3000 --type LoadBalancer
+        echo "Performing deployment of demoNodejsApp"
+        kubectl --kubeconfig conf create deployment demoNodejsApp --image demoNodejsApp
+        kubectl --kubeconfig conf expose deployment demoNodejsApp --port 3000 --type LoadBalancer
         external_ip=""
         while [ -z $external_ip ]; do
           echo "Waiting for end point..."
-          external_ip=$(kubectl --kubeconfig conf get svc demonodejspack1$RAND --template="{{range .status.loadBalancer.ingress}}{{.ip}}{{end}}")
+          external_ip=$(kubectl --kubeconfig conf get svc demoNodejsApp --template="{{range .status.loadBalancer.ingress}}{{.ip}}{{end}}")
           [ -z "$external_ip" ] && sleep 10
         done
         echo 'End point ready:' && echo $external_ip
-        kubectl --kubeconfig conf get svc amyth/demonodejs
+        kubectl --kubeconfig conf get svc demoNodejsApp
 
   

@@ -20,7 +20,7 @@ jobs:
         with:
           node-version: "14.x"
       - run: docker build . -t demonodejsapp
-      - run: docker push amyth11/amyth-repo:latest
+      - run: docker push amyth11/demonodejsapp
 
   deploy:
     runs-on: ubuntu-latest

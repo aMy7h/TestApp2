@@ -19,8 +19,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: "14.x"
-      - run: docker build . 
-      - run: 'echo "build done"'
+      - run: docker build . -t amyth/demonodejs
       - run: docker images
 
   

@@ -19,6 +19,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: "14.x"
+      - run: pwd    
       - run: docker build . -t demonodejsapp1
       - run: docker tag demonodejsapp1 amyth11/demonodejsapp1
       - run: docker login -u amyth11 -p ${{ secrets.DKRHB_PASSWD }}

@@ -21,10 +21,10 @@ jobs:
         with:
           node-version: "14.x"
       - run: pwd    
-      - run: docker build . -t demonodejsapp1
-      - run: docker tag demonodejsapp1 amyth11/demonodejsapp1
+      - run: docker build . -t demonodejsapp2
+      - run: docker tag demonodejsapp2 amyth11/demonodejsapp2
       - run: docker login -u amyth11 -p ${{ secrets.DKRHB_PASSWD }}
-      - run: docker push amyth11/demonodejsapp1
+      - run: docker push amyth11/demonodejsapp2
       
   security:
     runs-on: ubuntu-latest
@@ -66,14 +66,14 @@ jobs:
       run: |
         kubectl --kubeconfig conf get nodes
         export RAND=$RANDOM
-        echo "Performing deployment of nginx$RANDOM"
-        kubectl --kubeconfig conf create deployment nginx$RAND --image nginx
-        kubectl --kubeconfig conf expose deployment nginx$RAND --port 80 --type LoadBalancer
+        echo "Performing deployment of demonodejsapp2$RANDOM"
+        kubectl --kubeconfig conf create deployment demonodejsapp2$RAND --image demonodejsapp2
+        kubectl --kubeconfig conf expose deployment demonodejsapp2$RAND --port 80 --type LoadBalancer
         external_ip=""
         while [ -z $external_ip ]; do
           echo "Waiting for end point..."
-          external_ip=$(kubectl --kubeconfig conf get svc nginx$RAND --template="{{range .status.loadBalancer.ingress}}{{.ip}}{{end}}")
+          external_ip=$(kubectl --kubeconfig conf get svc demonodejsapp2$RAND --template="{{range .status.loadBalancer.ingress}}{{.ip}}{{end}}")
           [ -z "$external_ip" ] && sleep 10
         done
         echo 'End point ready:' && echo $external_ip
-        kubectl --kubeconfig conf get svc nginx$RAND
+        kubectl --kubeconfig conf get svc demonodejsapp2$RAND

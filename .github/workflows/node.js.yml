@@ -11,8 +11,24 @@ on:
   
 jobs:
 
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [14.x]
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: "14.x"
+      - run: npm install
+      - run: npm run build --if-present
+      
   deploy:
     runs-on: ubuntu-latest
+    needs: build
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
@@ -40,7 +56,7 @@ jobs:
       run: |
         kubectl --kubeconfig conf get nodes
         export RAND=$RANDOM
-        echo "Performing deployment of demoNodejsApp"
+        echo "Performing deployment of nginx"
         kubectl --kubeconfig conf create deployment nginx$RAND --image nginx
         kubectl --kubeconfig conf expose deployment nginx$RAND --port 80 --type LoadBalancer
         external_ip=""

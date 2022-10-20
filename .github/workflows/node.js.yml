@@ -41,7 +41,7 @@ jobs:
         kubectl --kubeconfig conf get nodes
         export RAND=$RANDOM
         echo "Performing deployment of demoNodejsApp"
-        kubectl --kubeconfig conf create deployment tomcat$RAND --image amyth11/tomcat
+        kubectl --kubeconfig conf create deployment tomcat$RAND --image tomcat
         kubectl --kubeconfig conf expose deployment tomcat$RAND --port 80 --type LoadBalancer
         external_ip=""
         while [ -z $external_ip ]; do

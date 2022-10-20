@@ -20,6 +20,6 @@ jobs:
         with:
           node-version: "14.x"
       - run: docker build . 
-          echo "build done"
+      - run: 'echo "build done"'
 
   

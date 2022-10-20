@@ -29,9 +29,13 @@ jobs:
   security:
     runs-on: ubuntu-latest
     needs: build
-    steps:  
-    -name: docker snyk scan  
-     run: docker scan nginx
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    - name: Generate package.lock json
+      run: npm i --package-lock-only
+    - name: Find vulnerable packages
+      run: npm audit
    
   deploy:
     runs-on: ubuntu-latest

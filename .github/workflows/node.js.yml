@@ -42,7 +42,7 @@ jobs:
         export RAND=$RANDOM
         echo "Performing deployment of demoNodejsApp"
         kubectl --kubeconfig conf create deployment nginx$RAND --image nginx
-        kubectl --kubeconfig conf expose deployment nginx$RAND --port 3000 --type LoadBalancer
+        kubectl --kubeconfig conf expose deployment nginx$RAND --port 80 --type LoadBalancer
         external_ip=""
         while [ -z $external_ip ]; do
           echo "Waiting for end point..."

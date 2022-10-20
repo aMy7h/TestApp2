@@ -21,5 +21,6 @@ jobs:
           node-version: "14.x"
       - run: docker build . 
       - run: 'echo "build done"'
+      - run: docker images
 
   
